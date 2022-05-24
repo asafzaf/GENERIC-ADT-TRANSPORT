@@ -1,8 +1,8 @@
 #ifndef __SCHEUDLE_H__
 #define __SCHEUDLE_H__
 
-#include "pr2ex5.h"
-
+#include "pr2ex4.h"
+#include "schedule_line_list.h"
 typedef struct schedule_s *Schedule;
 
 #define SCHEDULE_RESULT_TABLE(X)     \
@@ -24,7 +24,7 @@ typedef struct schedule_s *Schedule;
 typedef enum
 {
 	SCHEDULE_RESULT_TABLE(SCHEDULE_RESULT_AS_ENUM)
-}ScheduleResult;
+} ScheduleResult;
 
 /*
  * scheduleCreate
@@ -89,7 +89,8 @@ ScheduleResult scheduleAddLine(Schedule schedule, ScheduleLineType type, int num
  *      SCHEDULE_LINE_DOESNT_EXIST - If a line with thie number already exists.
  *      SCHEDULE_SUCCESS - In case of success.
  */
-ScheduleResult scheduleRemoveLine(Schedule schedule, int number);
+ScheduleResult
+scheduleRemoveLine(Schedule schedule, int number);
 
 /*
  * scheduleAddStationToLine
@@ -103,7 +104,8 @@ ScheduleResult scheduleRemoveLine(Schedule schedule, int number);
  *					must be in the inclusive range [1 ... 9999].
  *      station - The name of the station.
  *      time - The time, in minutes, from the beginning of the journey
- *				to this station. The time must be bigger or equal to zero
+ *				to this station. The time must be bigger or equal to the
+ *				time of the previous station.
  *  Result:
  *      SCHEDULE_NULL_ARG - If one or more parameters are NULL.
  *      SCHEDULE_INVALID_LINE_NUMBER - If number is invalid.
@@ -111,7 +113,8 @@ ScheduleResult scheduleRemoveLine(Schedule schedule, int number);
  *      SCHEDULE_LINE_DOESNT_EXIST - If a line with thie number already exists.
  *      SCHEDULE_SUCCESS - In case of success.
  */
-ScheduleResult scheduleAddStationToLine(Schedule schedule, int number,
+ScheduleResult
+scheduleAddStationToLine(Schedule schedule, int number,
 						 const char *station, int time);
 
 /*
@@ -135,7 +138,8 @@ ScheduleResult scheduleAddStationToLine(Schedule schedule, int number,
  *      SCHEDULE_STATION_DOESNT_EXIST - If no station at the requested index.
  *      SCHEDULE_SUCCESS - In case of success.
  */
-ScheduleResult scheduleRemoveStationFromLine(Schedule schedule, int number, int index);
+ScheduleResult
+scheduleRemoveStationFromLine(Schedule schedule, int number, int index);
 
 /*
  * scheduleReportStationsForLine
@@ -157,7 +161,8 @@ ScheduleResult scheduleRemoveStationFromLine(Schedule schedule, int number, int 
  *      SCHEDULE_LINE_DOESNT_EXIST - If the line doesn't exist.
  *      SCHEDULE_SUCCESS - In case of success.
  */
-ScheduleResult scheduleReportStationsForLine(Schedule schedule, int number);
+ScheduleResult
+scheduleReportStationsForLine(Schedule schedule, int number);
 
 /*
  * scheduleReportLines
@@ -179,7 +184,8 @@ ScheduleResult scheduleReportStationsForLine(Schedule schedule, int number);
  *      SCHEDULE_NO_LINES - If there're no such lines in Schedule.
  *      SCHEDULE_SUCCESS - In case of success.
  */
-ScheduleResult scheduleReportLines(Schedule schedule, ScheduleLineType type);
+ScheduleResult
+scheduleReportLines(Schedule schedule, ScheduleLineType type);
 
 /*
  * scheduleReportLinesBetweenStations
@@ -203,7 +209,10 @@ ScheduleResult scheduleReportLines(Schedule schedule, ScheduleLineType type);
  *      SCHEDULE_NO_LINES - If there're no appropriate lines in Schedule.
  *      SCHEDULE_SUCCESS - In case of success.
  */
-ScheduleResult scheduleReportLinesBetweenStations(Schedule schedule, const char *from,
+ScheduleResult
+scheduleReportLinesBetweenStations(Schedule schedule, const char *from,
 								   const char *to);
+/* void testStation(ScheduleStationList line_list);
+void test(Schedule schedule); */
 
 #endif /* __SCHEDULE_H__ */

@@ -1,10 +1,14 @@
+/* 
+reuploaded after fixing the program 
+Rony Zrihen 318317549 || Asaf Zafrir 205929029
+ */
 #include "schedule.h"
-#include "linked_list.h"
-#include "schedule_line.h"
+
+#include "schedule_station.h"
 
 typedef struct schedule_s
 {
-  LinkedList line_list;
+  ScheduleLineList line_list;
 } schedule;
 
 Schedule scheduleCreate()
@@ -19,41 +23,40 @@ Schedule scheduleCreate()
     return NULL;
   }
 
-  linkedListCreate(&(new_schedule->line_list), copyListLine, freeListLine, printListLine);
+  lineListCreate(&(new_schedule->line_list));
   return new_schedule;
 }
 
 void scheduleDestroy(Schedule schedule)
 {
-/*   scheduleline curr_line;
-  if (schedule->line_list != NULL)
+  ScheduleLine curr_line;
+  if (lineListGetNumElements(schedule->line_list) != 0)
   {
     do
     {
       lineListGotoHead(schedule->line_list);
       lineListGetCurrent(schedule->line_list, &curr_line);
       lineListRemoveCurrent(schedule->line_list);
-      linkedListDestroy(curr_line);
-    } while (linkedListGoToNext(schedule->line_list) == LIST_SUCCESS);
+      schedule_line_destroy(curr_line);
+    } while (lineListGotoNext(schedule->line_list) == LINE_LIST_SUCCESS);
   }
-  free(schedule); */
-  return ;
+  free(schedule);
 }
 ScheduleResult scheduleAddLine(Schedule schedule, ScheduleLineType type,
                                int number, const char *description,
                                double price)
 {
 
-  scheduleline new_line;
+  ScheduleLine new_line;
   char desc1[] = "Saburban";
   char desc2[] = "Intercity";
   char desc3[] = "Direct";
 
-  scheduleline curr_line;
-  //ScheduleLineType curr_type;
-  //int curr_number;
-  //char *curr_description;
-  //double curr_price;
+  ScheduleLine curr_line;
+  ScheduleLineType curr_type;
+  int curr_number;
+  char *curr_description;
+  double curr_price;
   if (schedule == NULL)
   {
     return SCHEDULE_NULL_ARG;
@@ -80,24 +83,27 @@ ScheduleResult scheduleAddLine(Schedule schedule, ScheduleLineType type,
     return SCHEDULE_INVALID_PRICE;
   }
 
-  if (linkedListFind(schedule->line_list, &number, match_by_number) == LIST_SUCCESS) //void8 means i have to sand in a pointer var
+  if (lineListFind(schedule->line_list, number) == LINE_LIST_SUCCESS)
   {
     return SCHEDULE_LINE_ALREADY_EXISTS;
   }
-  printf("here\n");
 
   // good to go
-   new_line = schedule_line_create(type, number, description, price);
+  new_line = schedule_line_create(type, number, description, price);
   if (new_line == NULL)
   {
     return SCHEDULE_OUT_OF_MEMORY;
   }
 
+  if (lineListGetNumElements(schedule->line_list) == 0)
+  {
 
-    linkedListGoToHead(schedule->line_list);
-    
-
- /* do
+    lineListGotoHead(schedule->line_list);
+    lineListInsertFirst(schedule->line_list, new_line);
+    return SCHEDULE_SUCCESS;
+  }
+  lineListGotoHead(schedule->line_list);
+  do
   {
     lineListGetCurrent(schedule->line_list, &curr_line);
     schedule_line_get_details(curr_line, &curr_type, &curr_number, &curr_description,
@@ -108,14 +114,14 @@ ScheduleResult scheduleAddLine(Schedule schedule, ScheduleLineType type,
       lineListInsertBeforeCurrent(schedule->line_list, new_line);
       return SCHEDULE_SUCCESS;
     }
-  } while (lineListGotoNext(schedule->line_list) == LIST_SUCCESS);
-  lineListInsertLast(schedule->line_list, new_line); */
+  } while (lineListGotoNext(schedule->line_list) == LINE_LIST_SUCCESS);
+  lineListInsertLast(schedule->line_list, new_line);
   return SCHEDULE_SUCCESS;
 }
 
 ScheduleResult scheduleRemoveLine(Schedule schedule, int number)
 {
-/*   ScheduleLine curr_line = NULL;
+  ScheduleLine curr_line = NULL;
   if (schedule == NULL)
   {
     return SCHEDULE_NULL_ARG;
@@ -131,17 +137,16 @@ ScheduleResult scheduleRemoveLine(Schedule schedule, int number)
     lineListRemoveCurrent(schedule->line_list);
     schedule_line_destroy(curr_line);
     return SCHEDULE_SUCCESS;
-  } */
+  }
   return SCHEDULE_LINE_DOESNT_EXIST;
 }
 
 ScheduleResult scheduleAddStationToLine(Schedule schedule, int number,
                                         const char *station, int time)
 {
-/* 
+
   ScheduleLine curr_line;
   ScheduleStation curr_station;
-
 
 
   if (schedule == NULL)
@@ -183,15 +188,15 @@ ScheduleResult scheduleAddStationToLine(Schedule schedule, int number,
     return SCHEDULE_OUT_OF_MEMORY;
   }
 
-  schedule_line_add_station(curr_line, curr_station); */
-  
+  schedule_line_add_station(curr_line, curr_station);
+
   return SCHEDULE_SUCCESS;
 }
 
 ScheduleResult scheduleRemoveStationFromLine(Schedule schedule, int number,
                                              int index)
 {
-/*   ScheduleLine line;
+  ScheduleLine line;
   ScheduleStationList station_list = NULL;
 
   int length = 0;
@@ -204,7 +209,7 @@ ScheduleResult scheduleRemoveStationFromLine(Schedule schedule, int number,
   {
     return SCHEDULE_INVALID_LINE_NUMBER;
   }
-
+  lineListGotoHead(schedule->line_list);
   if (lineListFind(schedule->line_list, number) == LINE_LIST_FAIL)
   {
     return SCHEDULE_LINE_DOESNT_EXIST;
@@ -228,18 +233,25 @@ ScheduleResult scheduleRemoveStationFromLine(Schedule schedule, int number,
   {
     stationListGotoNext(station_list);
   }
-  stationListRemoveCurrent(station_list); */
+  stationListRemoveCurrent(station_list);
   return SCHEDULE_SUCCESS;
 }
 
 ScheduleResult scheduleReportStationsForLine(Schedule schedule, int number)
 {
 
-/*   ScheduleLine line;
+  ScheduleLine line;
   ScheduleStationList station_list;
   ScheduleStation station;
   char *station_name;
   int station_time;
+
+  ScheduleLineType type;
+  int line_number;
+  char *line_description;
+  double line_price;
+  char *first_station;
+  char *last_station;
 
   if (schedule == NULL)
   {
@@ -249,10 +261,23 @@ ScheduleResult scheduleReportStationsForLine(Schedule schedule, int number)
   {
     return SCHEDULE_INVALID_LINE_NUMBER;
   }
-  lineListFind(schedule->line_list, number);
+  lineListGotoHead(schedule->line_list);
+  if (lineListFind(schedule->line_list, number) != LINE_LIST_SUCCESS)
+    return SCHEDULE_LINE_DOESNT_EXIST;
+
   lineListGetCurrent(schedule->line_list, &line);
   schedule_line_get_stations(line, &station_list);
   stationListGotoHead(station_list);
+
+  if (stationListGetNumElements(station_list) == 0)
+    return SCHEDULE_STATION_DOESNT_EXIST;
+
+  schedule_line_get_details(line, &type, &line_number, &line_description, &line_price);
+  get_first_and_last_stations(line, &first_station, &last_station);
+  schedulePrintLine(stdout, type, line_number, line_description, first_station, last_station, line_price);
+
+  stationListGotoHead(station_list);
+  stationListSortBy(station_list, STATION_LIST_SORT_BY_TIME);
   do
   {
 
@@ -261,65 +286,91 @@ ScheduleResult scheduleReportStationsForLine(Schedule schedule, int number)
     schedule_station_get_time(station, &station_time);
     schedulePrintStation(stdout, station_name, station_time);
 
-  } while (stationListGotoNext(station_list) == STATION_LIST_SUCCESS); */
+  } while (stationListGotoNext(station_list) == STATION_LIST_SUCCESS);
+  
   return SCHEDULE_SUCCESS;
 }
 
 ScheduleResult scheduleReportLines(Schedule schedule, ScheduleLineType type)
 {
-  /*   ScheduleLine line;
-  ScheduleStationList line_list;
+  ScheduleLine line;
+
   ScheduleLineType line_type;
-  ScheduleStation last_station;
-  ScheduleStation first_station;
   int number;
   char *description;
   char *first = NULL;
   char *last = NULL;
+  char NA[] = "N/A";
   double price;
+
+  if (schedule == NULL)
+    return SCHEDULE_NULL_ARG;
+
+  if (lineListGetNumElements(schedule->line_list) == 0)
+  {
+    return SCHEDULE_NO_LINES;
+  }
+
+  if (type < SCHEDULE_LINE_BUS || type > SCHEDULE_LINE_ALL)
+    return SCHEDULE_INVALID_LINE_TYPE;
+
   if (lineListGotoHead(schedule->line_list) == LINE_LIST_BAD_ARGUMENTS)
   {
     return SCHEDULE_NO_LINES;
   }
   do
   {
-
     if (lineListGetCurrent(schedule->line_list, &line) == LINE_LIST_FAIL)
     {
-      return SCHEDULE_NO_LINES;
+      return SCHEDULE_NULL_ARG;
     }
     schedule_line_get_details(line, &line_type, &number, &description, &price);
     if (type == SCHEDULE_LINE_ALL || type == line_type)
     {
-      schedule_line_get_stations(line, &line_list);
-  
-      stationListGetCurrent(line_list,&first_station);
-      schedule_station_get_name(first_station, &first);
-      while((stationListGotoNext(line_list) == STATION_LIST_SUCCESS));
-      stationListGetCurrent(line_list,&last_station);
-      schedule_station_get_name(first_station, &last);
 
-        
-      
-      
-     
+      if (get_first_and_last_stations(line, &first, &last) == SCHEDULE_LINE_STATION_DOESNT_EXIST)
+      {
+        schedulePrintLine(stdout, line_type, number, description, NA, NA, price);
+        continue;
+      }
       schedulePrintLine(stdout, line_type, number, description, first, last, price);
     }
-  } while (lineListGotoNext(schedule->line_list) == LINE_LIST_SUCCESS);*/
-  return 0; 
+  } while (lineListGotoNext(schedule->line_list) == LINE_LIST_SUCCESS);
+
+  return SCHEDULE_SUCCESS;
 }
 
 ScheduleResult scheduleReportLinesBetweenStations(Schedule schedule,
                                                   const char *from,
                                                   const char *to)
 {
-  return 0;
+  ScheduleLine curr_line;
+  ScheduleLineType line_type;
+  int number;
+  char *description;
+  double price;
+  char *first_station = NULL;
+  char *last_station = NULL;
+
+  lineListGotoHead(schedule->line_list);
+  do
+  {
+    lineListGetCurrent(schedule->line_list, &curr_line);
+    if (checkRoute(curr_line, from, to) == SCHEDULE_LINE_SUCCESS)
+    {
+      get_first_and_last_stations(curr_line, &first_station, &last_station);
+      schedule_line_get_details(curr_line, &line_type, &number, &description, &price);
+      schedulePrintLine(stdout, line_type, number, description, first_station, last_station, price);
+    }
+
+  } while (lineListGotoNext(schedule->line_list) == LINE_LIST_SUCCESS);
+  return SCHEDULE_SUCCESS;
 }
 
-void test(Schedule schedule)
+/* void test(Schedule schedule)
 {
 
- /*  ScheduleLine line;
+  ScheduleLine line;
   ScheduleLineType line_type;
   ScheduleStationList stations;
   int number;
@@ -332,21 +383,19 @@ void test(Schedule schedule)
     lineListGetCurrent(schedule->line_list, &line);
     schedule_line_get_details(line, &line_type, &number, &description, &price);
     printf("%d %s %s %.2f\n", number, description, line_type == SCHEDULE_LINE_METRO ? "Metro" : "Bus", price);
-    schedule_line_get_stations(line,&stations);
+    schedule_line_get_stations(line, &stations);
     testStation(stations);
-    
 
-  } while (lineListGotoNext(schedule->line_list) == LINE_LIST_SUCCESS); */
-  return;
+  } while (lineListGotoNext(schedule->line_list) == LINE_LIST_SUCCESS);
 }
 
-/* void testStation(ScheduleStationList line_list)
+void testStation(ScheduleStationList line_list)
 {
   ScheduleStation station;
   char *name;
   int time;
   stationListGotoHead(line_list);
-  printf("||%d||\n",stationListGetNumElements(line_list));
+  printf("||%d||\n", stationListGetNumElements(line_list));
   do
   {
     stationListGetCurrent(line_list, &station);
@@ -354,5 +403,4 @@ void test(Schedule schedule)
     schedule_station_get_time(station, &time);
     printf("%s %d\n", name, time);
   } while (stationListGotoNext(line_list) == STATION_LIST_SUCCESS);
-  return ;
 } */

@@ -1,51 +1,60 @@
-
 #include "schedule_station.h"
+#include "schedule_station_list.h"
 
 typedef struct schedule_station_s{
 
     int time;
     char *name;
 
-}schedule_station;
+}station;
 
- ListElement copyListLine(ListElement elem){
-ScheduleStation temp = (ScheduleStation)elem;
-if(temp == NULL){
-    return NULL;
+ScheduleStation schedule_station_create(const char *station, int time)
+{
+    
+    ScheduleStation new_station;
+    
+
+    new_station = (ScheduleStation)malloc(sizeof(station)); //list
+    if(new_station == NULL)
+    {
+        return NULL;
+    }
+    new_station->name = (char *)malloc(strlen(station) + 1);
+    if(new_station->name == NULL)
+    {
+        free(new_station);
+        return NULL;
+    }
+    strcpy(new_station->name, station);
+    new_station->time = time;
+    return new_station;
 }
-ScheduleStation new_station = (ScheduleStation)malloc(sizeof(schedule_station));
-if(new_station == NULL){
-    return NULL; 
-}
 
-new_station->time = temp->time;
-new_station->name = (char*)malloc(strlen(temp->name)+1);
-if(new_station->name == NULL){
-    free(new_station);
-    return NULL;
-}
-
-return new_station;
- } /*should return NULL if fails*/
- void freeListLine(ListElement elem){
-
-    if(elem == NULL)
-        return;
-
-     ScheduleStation station = (ScheduleStation)elem;
+ScheduleStationResult schedule_station_destroy(ScheduleStation station)
+{
+    if(station == NULL)
+    {
+        return SCHEDULE_STATION_BAD_ARGUMENTS;
+    }
     free(station->name);
     free(station);
-    return;
- }
- void printListLine(FILE *file, ListElement elem){
+    return SCHEDULE_STATION_SUCCESS;
+}
 
-    if(file == NULL || elem == NULL)
-        return;
-
-     ScheduleStation station =(ScheduleStation)elem;
-    fprintf(file, "%s||\t%d|\n",station->time, station->name);
+ScheduleStationResult schedule_station_get_name(ScheduleStation station, char **station_name)
+{
+    if(station == NULL) {
+        return SCHEDULE_STATION_NULL_ARG;
+    }
     
-    return;
- }
-
-
+    *station_name = station->name;
+    return SCHEDULE_STATION_SUCCESS;
+}
+ScheduleStationResult schedule_station_get_time(ScheduleStation station, int *time)
+{
+    if ( station == NULL ){
+        return SCHEDULE_STATION_BAD_ARGUMENTS;
+    }
+    *time = station->time;
+    return SCHEDULE_STATION_SUCCESS;
+}
