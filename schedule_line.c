@@ -22,17 +22,20 @@ scheduleline new_line = (scheduleline)malloc(sizeof(schedule_line));
 if(new_line == NULL){
     return NULL; 
 }
-new_line->description = (char*)malloc(strlen(temp->description)+1);
 
-strcpy(new_line->description ,new_line->description);
+new_line->description = (char*)malloc(strlen(temp->description)+1);
+if (new_line->description == NULL){
+    free(new_line);
+    return NULL;
+}
+strcpy(new_line->description ,temp->description);
 new_line->number = temp->number;
 new_line->price  = temp->price;
 new_line->type   = temp->type;
 linkedListCreate(&(new_line->stations), copyListStation, freeListStation, printListStation);
 
-
 return new_line;
- } /*should return NULL if fails*/
+ } 
  void freeListLine(ListElement elem){
 
     if(elem == NULL)
@@ -50,6 +53,7 @@ return new_line;
         return;
 
      scheduleline line =(scheduleline)elem;
+     
 
     fprintf(file, "%d||\t%s||\t%.2f\n",line->number, line->description, line->price );
     return;
@@ -97,28 +101,20 @@ int match_by_number(ListElement line_element, KeyForListElement elem ){
   return new_line;
 }
 
-// ScheduleLineResult schedule_line_destroy(ScheduleLine line){
+ScheduleLineResult schedule_line_destroy(scheduleline line){
 
-// ScheduleStation curr_station;
-//   if(line == NULL) {
-//     return SCHEDULE_LINE_BAD_ARGUMENTS;
-//   }
-// if(line->stations_list != NULL){
+  if(line == NULL) {
+    return SCHEDULE_LINE_BAD_ARGUMENTS;
+  }
 
-// do{
-//   stationListGotoHead(line->stations_list);
-//   stationListGetCurrent(line->stations_list, &curr_station);
-//   stationListRemoveCurrent(line->stations_list);
-//   schedule_station_destroy(curr_station);
-// }
-// while(stationListGotoNext(line->stations_list) == STATION_LIST_SUCCESS);
-// }
+if(linkedListGetNumElements(line->stations) != 0)
+  linkedListDestroy(line->stations);
 
-// free(line->description);
-// free(line);
+free(line->description);
+free(line);
 
-//   return SCHEDULE_LINE_SUCCESS;
-// }
+  return SCHEDULE_LINE_SUCCESS;
+}
 
 // ScheduleLineResult schedule_line_get_stations(ScheduleLine line, ScheduleStationList *stations){
 //   if(line == NULL || stations == NULL) {
@@ -157,25 +153,25 @@ int match_by_number(ListElement line_element, KeyForListElement elem ){
 // }
 
 
-// ScheduleLineResult schedule_line_get_details(ScheduleLine line,
-//                                              ScheduleLineType *type /* out */,
-//                                              int *number /* out */,
-//                                              char **description /* out */,
-//                                              double *price /* out */){
+ScheduleLineResult schedule_line_get_details(scheduleline line,
+                                             ScheduleLineType *type /* out */,
+                                             int *number /* out */,
+                                             char **description /* out */,
+                                             double *price /* out */){
 
                                           
-//   if(line == NULL){
-//     return SCHEDULE_LINE_BAD_ARGUMENTS;
-//   }
+  if(line == NULL){
+    return SCHEDULE_LINE_BAD_ARGUMENTS;
+  }
 
-//   *type = line->type;
-//   *number = line->number;
-//   *description = line->description;
-//   *price = line->price;
+  *type = line->type;
+  *number = line->number;
+  *description = line->description;
+  *price = line->price;
 
 
-//   return 0;
-// }
+  return 0;
+}
 
   int is_price_valid(float price)
   {

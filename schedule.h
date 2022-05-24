@@ -206,4 +206,5 @@ ScheduleResult scheduleReportLines(Schedule schedule, ScheduleLineType type);
 ScheduleResult scheduleReportLinesBetweenStations(Schedule schedule, const char *from,
 								   const char *to);
 
+ void test(Schedule schedule);
 #endif /* __SCHEDULE_H__ */

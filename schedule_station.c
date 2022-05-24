@@ -13,7 +13,7 @@ ScheduleStation temp = (ScheduleStation)elem;
 if(temp == NULL){
     return NULL;
 }
-ScheduleStation new_station = (ScheduleStation)malloc(sizeof(ScheduleStation));
+ScheduleStation new_station = (ScheduleStation)malloc(sizeof(schedule_station));
 if(elem == NULL){
     return NULL; 
 }
@@ -32,7 +32,7 @@ void freeListStation(ListElement elem){
 
     if(elem == NULL)
         return;
-    free(elem);
+    free(elem); //what about the name?
 
     return;
  }
@@ -47,7 +47,7 @@ void printListStation(FILE *file, ListElement elem){
     return;
  }
 
-static int compareStationsByName(ListElement elem1, ListElement elem2){
+int compareStationsByName(ListElement elem1, ListElement elem2){
     ScheduleStation station1 = (ScheduleStation)elem1;
     ScheduleStation station2 = (ScheduleStation)elem2;
     if (station1 == NULL || station2 == NULL)
@@ -55,7 +55,7 @@ static int compareStationsByName(ListElement elem1, ListElement elem2){
     return strcmp(station1->name, station2->name);
 }
 
-static int matchStationsByName(ListElement elem, KeyForListElement key){
+int matchStationsByName(ListElement elem, KeyForListElement key){
     ScheduleStation station = (ScheduleStation)elem;
     char *name = (char *)key;
     if (station == NULL || name == NULL )
@@ -65,20 +65,20 @@ static int matchStationsByName(ListElement elem, KeyForListElement key){
 
 ScheduleStationResult StationCreate(ScheduleStation *station) //wtf
 {
-    if (station == NULL)
-        return SCHEDULE_STATION_BAD_ARGUMENTS;
+    // if (station == NULL)
+    //     return SCHEDULE_STATION_BAD_ARGUMENTS;
 
-    ScheduleStation new_station = (station)malloc(sizeof(struct station_s));
-    if (new_station == NULL)
-        return SCHEDULE_STATION_OUT_OF_MEMORY;
+    // ScheduleStation new_station = (ScheduleStation)malloc(sizeof(schedule_station))); // fixed the types, please test run the program befor uploading!!!!
+    // if (new_station == NULL)
+    //     return SCHEDULE_STATION_OUT_OF_MEMORY;
 
-    sprintf(new_station->description, "%s", GROUP_DESCRIPTION);
-    if (linkedListCreate(&(new_station->list), copyListStation, freeListStation, printListStation) != LIST_SUCCESS)
-    {
-        free(new_station);
-        return SCHEDULE_STATION_OUT_OF_MEMORY;
-    }
+    // //sprintf(new_station->description, "%s", GROUP_DESCRIPTION); //this is not needed
+    // if (linkedListCreate(&(new_station->list), copyListStation, freeListStation, printListStation) != LIST_SUCCESS)
+    // {
+    //     free(new_station);
+    //     return SCHEDULE_STATION_OUT_OF_MEMORY;
+    // }
 
-    *station = new_station;
+    // *station = new_station;
     return SCHEDULE_STATION_SUCCESS;
 }

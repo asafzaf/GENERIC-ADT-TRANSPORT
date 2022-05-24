@@ -25,18 +25,10 @@ Schedule scheduleCreate()
 
 void scheduleDestroy(Schedule schedule)
 {
-/*   scheduleline curr_line;
-  if (schedule->line_list != NULL)
-  {
-    do
-    {
-      lineListGotoHead(schedule->line_list);
-      lineListGetCurrent(schedule->line_list, &curr_line);
-      lineListRemoveCurrent(schedule->line_list);
-      linkedListDestroy(curr_line);
-    } while (linkedListGoToNext(schedule->line_list) == LIST_SUCCESS);
+  if (linkedListGetNumElements(schedule->line_list) != 0){
+    
   }
-  free(schedule); */
+  free(schedule); 
   return ;
 }
 ScheduleResult scheduleAddLine(Schedule schedule, ScheduleLineType type,
@@ -49,11 +41,11 @@ ScheduleResult scheduleAddLine(Schedule schedule, ScheduleLineType type,
   char desc2[] = "Intercity";
   char desc3[] = "Direct";
 
-  scheduleline curr_line;
-  ScheduleLineType curr_type;
-  int curr_number;
-  char *curr_description;
-  double curr_price;
+  // scheduleline curr_line;
+  // ScheduleLineType curr_type;
+  // int curr_number;              //for testing
+  // char *curr_description;
+  // double curr_price;
   if (schedule == NULL)
   {
     return SCHEDULE_NULL_ARG;
@@ -80,12 +72,11 @@ ScheduleResult scheduleAddLine(Schedule schedule, ScheduleLineType type,
     return SCHEDULE_INVALID_PRICE;
   }
 
-  if (linkedListFind(schedule->line_list, &number, match_by_number) == LIST_SUCCESS) //void8 means i have to sand in a pointer var
+  if (linkedListFind(schedule->line_list, &number, match_by_number) == LIST_SUCCESS) //void* means i have to send in a pointer var
   {
     return SCHEDULE_LINE_ALREADY_EXISTS;
   }
-  printf("here\n");
-
+  
   // good to go
    new_line = schedule_line_create(type, number, description, price);
   if (new_line == NULL)
@@ -95,27 +86,13 @@ ScheduleResult scheduleAddLine(Schedule schedule, ScheduleLineType type,
 
 
     linkedListGoToHead(schedule->line_list);
-    
-
- /* do
-  {
-    linkedListGetCurrent(schedule->line_list, &curr_line);
-    schedule_line_get_details(curr_line, &curr_type, &curr_number, &curr_description,
-                              &curr_price);
-
-    if (price <= curr_price)
-    {
-      lineListInsertBeforeCurrent(schedule->line_list, new_line);
-      return SCHEDULE_SUCCESS;
-    }
-  } while (lineListGotoNext(schedule->line_list) == LIST_SUCCESS);
-  lineListInsertLast(schedule->line_list, new_line); */
+  linkedListInsertLast(schedule->line_list, new_line);
   return SCHEDULE_SUCCESS;
 }
 
 ScheduleResult scheduleRemoveLine(Schedule schedule, int number)
 {
-/*   ScheduleLine curr_line = NULL;
+  scheduleline curr_line = NULL;
   if (schedule == NULL)
   {
     return SCHEDULE_NULL_ARG;
@@ -125,13 +102,13 @@ ScheduleResult scheduleRemoveLine(Schedule schedule, int number)
     return SCHEDULE_INVALID_LINE_NUMBER;
   }
 
-  if (lineListFind(schedule->line_list, number) == LINE_LIST_SUCCESS)
+  if (linkedListFind(schedule->line_list, &number, match_by_number) == LIST_SUCCESS )
   {
 
-    lineListRemoveCurrent(schedule->line_list);
+    linkedListRemoveCurrent(schedule->line_list);
     schedule_line_destroy(curr_line);
     return SCHEDULE_SUCCESS;
-  } */
+  }
   return SCHEDULE_LINE_DOESNT_EXIST;
 }
 
@@ -316,30 +293,16 @@ ScheduleResult scheduleReportLinesBetweenStations(Schedule schedule,
   return 0;
 }
 
-void test(Schedule schedule)
+
+
+//===============testing functions===============//
+ void test(Schedule schedule)
 {
 
- /*  ScheduleLine line;
-  ScheduleLineType line_type;
-  ScheduleStationList stations;
-  int number;
-  char *description;
-  double price;
-
-  lineListGotoHead(schedule->line_list);
-  do
-  {
-    lineListGetCurrent(schedule->line_list, &line);
-    schedule_line_get_details(line, &line_type, &number, &description, &price);
-    printf("%d %s %s %.2f\n", number, description, line_type == SCHEDULE_LINE_METRO ? "Metro" : "Bus", price);
-    schedule_line_get_stations(line,&stations);
-    testStation(stations);
-    
-
-  } while (lineListGotoNext(schedule->line_list) == LINE_LIST_SUCCESS); */
+linkedListPrint(schedule->line_list, stdout, 10);
   return;
 }
-
+ 
 /* void testStation(ScheduleStationList line_list)
 {
   ScheduleStation station;
