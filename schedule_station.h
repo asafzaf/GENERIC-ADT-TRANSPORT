@@ -19,7 +19,8 @@ typedef enum
 ListElement copyListStation(ListElement elem);
 void freeListStation(ListElement elem);
 void printListStation(FILE *file, ListElement elem);
-
+static int compareStationsByName(ListElement elem1, ListElement elem2);
+static int matchStationsByName(ListElement elem, KeyForListElement key);
 
 
 
