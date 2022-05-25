@@ -20,8 +20,8 @@ typedef enum
 
 scheduleline schedule_line_create(ScheduleLineType type, int number, const char *description, double price);
 ScheduleLineResult schedule_line_destroy(scheduleline line);
-//ScheduleLineResult schedule_line_get_stations(scheduleline line, ScheduleStationList *stations);
-//ScheduleLineResult schedule_line_add_station(scheduleline line, ScheduleStation station);
+ScheduleLineResult schedule_line_get_stations(ListElement elem, LinkedList *stations);
+ScheduleLineResult schedule_line_add_station(ListElement elem1, ListElement elem2);
 ScheduleLineResult schedule_line_get_details(scheduleline line,
                                              ScheduleLineType *type /* out */,
                                              int *number /* out */,
@@ -33,6 +33,6 @@ void freeListLine(ListElement elem);
 void printListLine(FILE *file, ListElement elem);
 int match_by_number(ListElement list, KeyForListElement elem );
 int is_price_valid(float price);
-
+void printstat(scheduleline line);
 
 #endif

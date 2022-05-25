@@ -19,10 +19,14 @@ typedef enum
 ListElement copyListStation(ListElement elem);
 void freeListStation(ListElement elem);
 void printListStation(FILE *file, ListElement elem);
-static int compareStationsByName(ListElement elem1, ListElement elem2);
-static int matchStationsByName(ListElement elem, KeyForListElement key);
+int compareStationsByName(ListElement elem1, ListElement elem2);
+int matchStationsByName(ListElement elem, KeyForListElement key);
 
-
+//============EX4 functions============//
+ScheduleStation schedule_station_create(const char *station, int time);
+ScheduleStationResult schedule_station_destroy(ScheduleStation station);
+ScheduleStationResult schedule_station_get_name(ScheduleStation station, char **station_name);
+ScheduleStationResult schedule_station_get_time(ScheduleStation station, int *time);
 
 
 

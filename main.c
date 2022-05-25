@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "schedule.h"
 #include "pr2ex5.h"
+#include "linked_list.h"
 
 #define ERROR_STREAM stderr
 #define OUT_STREAM stdout
@@ -58,7 +59,8 @@ test_result_t test1()
         scheduleDestroy(schedule);
         return FAIL;
     }
-/*     if (schedule_handle_result(scheduleAddLine(schedule, SCHEDULE_LINE_TRAIN, 4000, "Direct", 20.7)))
+
+    if (schedule_handle_result(scheduleAddLine(schedule, SCHEDULE_LINE_TRAIN, 4000, "Direct", 20.7)))
     {
         scheduleDestroy(schedule);
         return FAIL;
@@ -68,35 +70,38 @@ test_result_t test1()
         scheduleDestroy(schedule);
         return FAIL;
     }
-
+    test(schedule);
     printf("\nAdd stations to bus line #37...\n");
     if (schedule_handle_result(scheduleAddStationToLine(schedule, 37, "Bay_Central", 0)))
     {
         scheduleDestroy(schedule);
         return FAIL;
     }
+    printf("Bay_Central was added\n");
     if (schedule_handle_result(scheduleAddStationToLine(schedule, 37, "Horev Center", 22)))
     {
         scheduleDestroy(schedule);
         return FAIL;
     }
+    printf("Horev Center was added\n");
     if (schedule_handle_result(scheduleAddStationToLine(schedule, 37, "Haifa University", 32)))
     {
         scheduleDestroy(schedule);
         return FAIL;
     }
+    printf("Haifa University was added\n");
     if (schedule_handle_result(scheduleAddStationToLine(schedule, 37, "Hadar", 15)))
     {
         scheduleDestroy(schedule);
         return FAIL;
     }
-
     printf("\nAdd stations to train line #4000\n");
     if (schedule_handle_result(scheduleAddStationToLine(schedule, 4000, "Carmel_Beach", 0)))
     {
         scheduleDestroy(schedule);
         return FAIL;
     }
+
     if (schedule_handle_result(scheduleAddStationToLine(schedule, 4000, "Binyamina", 22)))
     {
         scheduleDestroy(schedule);
@@ -112,6 +117,7 @@ test_result_t test1()
         scheduleDestroy(schedule);
         return FAIL;
     }
+testStation(schedule);
 
     printf("\nAdd stations to bus line #24\n");
     if (schedule_handle_result(scheduleAddStationToLine(schedule, 24, "Bay_Central", 0)))
@@ -136,6 +142,8 @@ test_result_t test1()
         scheduleDestroy(schedule);
         return FAIL;
     }
+    testStation(schedule);
+/*  stuck here!
 
     printf("\nReport all lines...\n");
     if (schedule_handle_result(scheduleReportLines(schedule, SCHEDULE_LINE_ALL)))
@@ -174,8 +182,8 @@ test_result_t test1()
         scheduleDestroy(schedule);
         return FAIL;
     }
-
-    scheduleDestroy(schedule); */
+*/
+    scheduleDestroy(schedule); 
     return SUCCESS;
 }
 
