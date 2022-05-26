@@ -143,7 +143,6 @@ testStation(schedule);
         return FAIL;
     }
     testStation(schedule);
-/*  stuck here!
 
     printf("\nReport all lines...\n");
     if (schedule_handle_result(scheduleReportLines(schedule, SCHEDULE_LINE_ALL)))
@@ -158,18 +157,19 @@ testStation(schedule);
         scheduleDestroy(schedule);
         return FAIL;
     }
-    printf("\nReport lines between certain stations...\n");
-    if (schedule_handle_result(scheduleReportLinesBetweenStations(schedule, "Bay_Central", "Haifa University")))
-    {
-        scheduleDestroy(schedule);
-        return FAIL;
-    }
+    // printf("\nReport lines between certain stations...\n");
+    // if (schedule_handle_result(scheduleReportLinesBetweenStations(schedule, "Bay_Central", "Haifa University")))
+    // {
+    //     scheduleDestroy(schedule);
+    //     return FAIL;
+    // }
     printf("\nReport stations for line\n");
     if (schedule_handle_result(scheduleReportStationsForLine(schedule, 4000)))
     {
         scheduleDestroy(schedule);
         return FAIL;
     }
+/*  stuck here!
     printf("\nReport stations for line\n");
     if (schedule_handle_result(scheduleReportStationsForLine(schedule, 37)))
     {
