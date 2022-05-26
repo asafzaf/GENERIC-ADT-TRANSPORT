@@ -21,7 +21,7 @@ void freeListStation(ListElement elem);
 void printListStation(FILE *file, ListElement elem);
 int compareStationsByName(ListElement elem1, ListElement elem2);
 int matchStationsByName(ListElement elem, KeyForListElement key);
-
+int compareStationByTime(ListElement elem1, ListElement elem2);
 //============EX4 functions============//
 ScheduleStation schedule_station_create(const char *station, int time);
 ScheduleStationResult schedule_station_destroy(ScheduleStation station);

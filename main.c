@@ -70,7 +70,7 @@ test_result_t test1()
         scheduleDestroy(schedule);
         return FAIL;
     }
-    test(schedule);
+    //test(schedule);
     printf("\nAdd stations to bus line #37...\n");
     if (schedule_handle_result(scheduleAddStationToLine(schedule, 37, "Bay_Central", 0)))
     {
@@ -117,7 +117,7 @@ test_result_t test1()
         scheduleDestroy(schedule);
         return FAIL;
     }
-testStation(schedule);
+//testStation(schedule);
 
     printf("\nAdd stations to bus line #24\n");
     if (schedule_handle_result(scheduleAddStationToLine(schedule, 24, "Bay_Central", 0)))
@@ -142,7 +142,7 @@ testStation(schedule);
         scheduleDestroy(schedule);
         return FAIL;
     }
-    testStation(schedule);
+   // testStation(schedule);
 
     printf("\nReport all lines...\n");
     if (schedule_handle_result(scheduleReportLines(schedule, SCHEDULE_LINE_ALL)))
@@ -157,12 +157,12 @@ testStation(schedule);
         scheduleDestroy(schedule);
         return FAIL;
     }
-    // printf("\nReport lines between certain stations...\n");
-    // if (schedule_handle_result(scheduleReportLinesBetweenStations(schedule, "Bay_Central", "Haifa University")))
-    // {
-    //     scheduleDestroy(schedule);
-    //     return FAIL;
-    // }
+    printf("\nReport lines between certain stations...\n");
+    if (schedule_handle_result(scheduleReportLinesBetweenStations(schedule, "Bay_Central", "Haifa University")))
+    {
+        scheduleDestroy(schedule);
+        return FAIL;
+    }
     printf("\nReport stations for line\n");
     if (schedule_handle_result(scheduleReportStationsForLine(schedule, 4000)))
     {

@@ -35,10 +35,12 @@ ListElement copyListStation(ListElement elem)
 
 void freeListStation(ListElement elem)
 {
-
+    ScheduleStation station = (ScheduleStation)elem;
     if (elem == NULL)
         return;
-    free(elem); // what about the name?
+
+    free(station->name);
+    free(station); 
 
     return;
 }
@@ -63,6 +65,25 @@ int compareStationsByName(ListElement elem1, ListElement elem2)
     return strcmp(station1->name, station2->name);
 }
 
+int compareStationByTime(ListElement elem1, ListElement elem2){
+    ScheduleStation station1 = (ScheduleStation)elem1;
+    ScheduleStation station2 = (ScheduleStation)elem2;
+
+    if (station1 == NULL || station2 == NULL){
+        return 0;
+    }
+
+    if(station1->time == station2->time){
+
+        printf("hello\n");
+        return 0;
+    }
+
+    if(station1->time < station2->time){
+        return -1;
+}    
+    return 1;
+}
 int matchStationsByName(ListElement elem, KeyForListElement key)
 {
     ScheduleStation station = (ScheduleStation)elem;

@@ -114,7 +114,7 @@ ScheduleResult scheduleAddStationToLine(Schedule schedule, int number,
 
   scheduleline curr_line;
   ScheduleStation curr_station;
-
+  int time1;
 
 
   if (schedule == NULL)
@@ -145,16 +145,18 @@ ScheduleResult scheduleAddStationToLine(Schedule schedule, int number,
     return SCHEDULE_LINE_DOESNT_EXIST;
   }
 
+
   if (linkedListGetCurrent(schedule->line_list, (ListElement)&curr_line) == LIST_FAIL) // find and get the line
   {
     return SCHEDULE_NO_LINES;
+  }
+
   curr_station = schedule_station_create(station, time);
   if (curr_station == NULL)
   {
     return SCHEDULE_OUT_OF_MEMORY;
   }
 
-  }
   schedule_line_add_station(curr_line, curr_station);
   return SCHEDULE_SUCCESS;
 }
@@ -275,12 +277,23 @@ ScheduleResult scheduleReportLines(Schedule schedule, ScheduleLineType type)
   } while (linkedListGoToNext(schedule->line_list) == LIST_SUCCESS);
   return SCHEDULE_SUCCESS; 
 }
-
 ScheduleResult scheduleReportLinesBetweenStations(Schedule schedule,
                                                   const char *from,
                                                   const char *to)
 {
-  return 0;
+scheduleline curr_line;
+ LinkedList station_list;
+ ScheduleStation curr_station;
+  linkedListGoToHead(schedule->line_list);
+do{
+linkedListGetCurrent(schedule->line_list,(ListElement*) &curr_line);
+schedule_line_get_stations(curr_line,(LinkedList*) &station_list);
+linkedListGoToHead(station_list);
+
+linkedListSortElements(station_list, compareStationByTime );
+
+}
+while(linkedListGoToNext(schedule->line_list) == LIST_SUCCESS);
 }
 
 
