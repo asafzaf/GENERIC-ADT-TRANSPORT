@@ -212,12 +212,12 @@ test_result_t test2()
         return FAIL;
     }
 
-    printf("\nAdd stations to bus line\n");
     if (schedule_handle_result(scheduleReportStationsForLine(schedule, 901)))
     {
         scheduleDestroy(schedule);
         return FAIL;
     }
+    printf("\nAdd stations to bus line\n");
     if (schedule_handle_result(scheduleAddStationToLine(schedule, 901, "Carmel Beach", 0)))
     {
         scheduleDestroy(schedule);
@@ -357,6 +357,7 @@ test_result_t test2()
 
     scheduleDestroy(schedule);
 
+    printf("\nFLAG\n");
     return SUCCESS;
 }
 
@@ -542,5 +543,5 @@ test_result_t test3()
 int main()
 {
     const test_func tests[] = {test1, test2, test3};
-    return tests[1]();
+    return tests[0]();
 }

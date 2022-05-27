@@ -1,4 +1,10 @@
 
+/*
+========ASSIGNED BY======== 
+  Rony Zrihen 318917549
+  Asaf Zafrir 205929029
+ */
+
 #include "schedule_station.h"
 
 typedef struct schedule_station_s
@@ -133,7 +139,7 @@ ScheduleStationResult schedule_station_destroy(ScheduleStation station)
 
 ScheduleStationResult schedule_station_get_name(ScheduleStation station, char **station_name)
 {
-    if (station == NULL)
+    if (station == NULL || station->name == NULL)
     {
         return SCHEDULE_STATION_NULL_ARG;
     }

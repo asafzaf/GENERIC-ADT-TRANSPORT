@@ -14,6 +14,8 @@ typedef enum
     SCHEDULE_LINE_BAD_ARGUMENTS,
     SCHEDULE_LINE_OUT_OF_MEMORY,
     SCHEDULE_LINE_NULL_ARG,
+    SCHEDULE_NO_STATIONS,
+
     
     /* add here more errorcodes */
 } ScheduleLineResult;
@@ -35,6 +37,8 @@ void freeListLine(ListElement elem);
 void printListLine(FILE *file, ListElement elem);
 int match_by_number(ListElement list, KeyForListElement elem );
 int is_price_valid(float price);
-void printstat(scheduleline line);
+
+//=============test functions============//
+//void printstat(scheduleline line);
 
 #endif

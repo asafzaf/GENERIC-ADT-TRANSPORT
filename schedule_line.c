@@ -1,3 +1,9 @@
+/*
+========ASSIGNED BY======== 
+  Rony Zrihen 318917549
+  Asaf Zafrir 205929029
+ */
+
 #include "schedule_line.h"
 #include "schedule_station.h"
 
@@ -220,8 +226,9 @@ ScheduleLineResult get_first_and_last_stations(scheduleline line, char **first_s
 {
 
   ScheduleStation curr_station;
-  if (linkedListGetNumElements(line->stations) == 0)
+  if (linkedListGetNumElements(line->stations) == 0){
     return SCHEDULE_LINE_NULL_ARG;
+  }
 
   linkedListGoToHead(line->stations);
   linkedListSortElements(line->stations, compareStationByTime);
@@ -244,9 +251,9 @@ int is_price_valid(float price)
   }
   return 1;
 }
-
-void printstat(scheduleline line)
-{
-  linkedListPrint(line->stations, stdout, 10);
-  return;
-}
+//===========test functions===========//
+// void printstat(scheduleline line)
+// {
+//   linkedListPrint(line->stations, stdout, 10);
+//   return;
+// }
