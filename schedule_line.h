@@ -28,6 +28,8 @@ ScheduleLineResult schedule_line_get_details(scheduleline line,
                                              char **description /* out */,
                                              double *price /* out */);
 
+ScheduleLineResult checkRoute(scheduleline line, const char *from, const char *to);
+ScheduleLineResult get_first_and_last_stations(scheduleline line, char **first_station, char **last_station);
 ListElement copyListLine(ListElement elem);
 void freeListLine(ListElement elem);
 void printListLine(FILE *file, ListElement elem);

@@ -1,92 +1,102 @@
 #include "schedule_line.h"
 #include "schedule_station.h"
 
-typedef struct schedule_line{
+typedef struct schedule_line
+{
 
-int number;
-double price;
-LinkedList stations;
-ScheduleLineType type;
-char *description;
+  int number;
+  double price;
+  LinkedList stations;
+  ScheduleLineType type;
+  char *description;
 
-}schedule_line;
+} schedule_line;
 
 //===========Basic ADT functions===========//
 
- ListElement copyListLine(ListElement elem){
-scheduleline temp = (scheduleline)elem;
-if(temp == NULL){
+ListElement copyListLine(ListElement elem)
+{
+  scheduleline temp = (scheduleline)elem;
+  if (temp == NULL)
+  {
     return NULL;
-}
-scheduleline new_line = (scheduleline)malloc(sizeof(schedule_line));
-if(new_line == NULL){
-    return NULL; 
-}
+  }
+  scheduleline new_line = (scheduleline)malloc(sizeof(schedule_line));
+  if (new_line == NULL)
+  {
+    return NULL;
+  }
 
-new_line->description = (char*)malloc(strlen(temp->description)+1);
-if (new_line->description == NULL){
+  new_line->description = (char *)malloc(strlen(temp->description) + 1);
+  if (new_line->description == NULL)
+  {
     free(new_line);
     return NULL;
+  }
+  strcpy(new_line->description, temp->description);
+  new_line->number = temp->number;
+  new_line->price = temp->price;
+  new_line->type = temp->type;
+  linkedListCreate(&(new_line->stations), copyListStation, freeListStation, printListStation);
+
+  return new_line;
 }
-strcpy(new_line->description ,temp->description);
-new_line->number = temp->number;
-new_line->price  = temp->price;
-new_line->type   = temp->type;
-linkedListCreate(&(new_line->stations), copyListStation, freeListStation, printListStation);
+void freeListLine(ListElement elem)
+{
 
-return new_line;
- } 
- void freeListLine(ListElement elem){
-
-    if(elem == NULL)
-        return;
-
-     scheduleline line = (scheduleline)elem;
-    linkedListDestroy(line->stations);
-    free(line->description);
-    free(line);
+  if (elem == NULL)
     return;
- }
- void printListLine(FILE *file, ListElement elem){
 
-    if(file == NULL || elem == NULL)
-        return;
+  scheduleline line = (scheduleline)elem;
+  linkedListDestroy(line->stations);
+  free(line->description);
+  free(line);
+  return;
+}
+void printListLine(FILE *file, ListElement elem)
+{
 
-     scheduleline line =(scheduleline)elem;
-     
-
-    fprintf(file, "%-5d||\t%-10s||%.2f\n",line->number, line->description, line->price );
+  if (file == NULL || elem == NULL)
     return;
- }
+
+  scheduleline line = (scheduleline)elem;
+
+  fprintf(file, "%-5d||\t%-10s||%.2f\n", line->number, line->description, line->price);
+  return;
+}
 
 //===========match functions===========//
 
-int match_by_number(ListElement line_element, KeyForListElement elem ){
-    scheduleline line;
-    int number;
+int match_by_number(ListElement line_element, KeyForListElement elem)
+{
+  scheduleline line;
+  int number;
 
-    if(line_element == NULL || elem == NULL){
-        return 0;
-    }
-    line = (scheduleline)line_element;
-    number = *(int*)elem; //function asks for a void* elem meaning we need to dereferance a pionter
-    return line->number == number; //returns a binary answer
+  if (line_element == NULL || elem == NULL)
+  {
+    return 0;
+  }
+  line = (scheduleline)line_element;
+  number = *(int *)elem;         // function asks for a void* elem meaning we need to dereferance a pionter
+  return line->number == number; // returns a binary answer
 }
 
+//===========EX4 functions===========//
 
- //===========EX4 functions===========//
-
- scheduleline schedule_line_create(ScheduleLineType type, int number,
-                                  const char *description, double price) {
+scheduleline schedule_line_create(ScheduleLineType type, int number,
+                                  const char *description, double price)
+{
 
   scheduleline new_line;
   new_line = (scheduleline)malloc(sizeof(schedule_line));
-  if (new_line == NULL) {
+  if (new_line == NULL)
+  {
     printf("NULL\n");
     return NULL;
   }
   new_line->description = (char *)malloc(strlen(description) + 1);
-  if (new_line->description == NULL) {
+  if (new_line->description == NULL)
+  {
     printf("NULL\n");
     return NULL;
   }
@@ -94,65 +104,72 @@ int match_by_number(ListElement line_element, KeyForListElement elem ){
   new_line->price = price;
   new_line->type = type;
   new_line->number = number;
-  if(linkedListCreate(&(new_line->stations), copyListStation, freeListStation, printListStation) == LIST_OUT_OF_MEMORY){
-        return NULL;
+  if (linkedListCreate(&(new_line->stations), copyListStation, freeListStation, printListStation) == LIST_OUT_OF_MEMORY)
+  {
+    return NULL;
   }
 
   return new_line;
 }
 
-ScheduleLineResult schedule_line_destroy(scheduleline line){
+ScheduleLineResult schedule_line_destroy(scheduleline line)
+{
 
-  if(line == NULL) {
+  if (line == NULL)
+  {
     return SCHEDULE_LINE_BAD_ARGUMENTS;
   }
 
-if(linkedListGetNumElements(line->stations) != 0)
-  linkedListDestroy(line->stations);
+  if (linkedListGetNumElements(line->stations) != 0)
+    linkedListDestroy(line->stations);
 
-free(line->description);
-free(line);
+  free(line->description);
+  free(line);
 
   return SCHEDULE_LINE_SUCCESS;
 }
 
-ScheduleLineResult schedule_line_get_stations(ListElement elem, LinkedList *stations){
+ScheduleLineResult schedule_line_get_stations(ListElement elem, LinkedList *stations)
+{
   scheduleline line;
-  
-  if(elem == NULL || stations == NULL) {
+
+  if (elem == NULL || stations == NULL)
+  {
     return SCHEDULE_LINE_BAD_ARGUMENTS;
   }
 
   line = (scheduleline)elem;
   *stations = (LinkedList)line->stations;
-   return SCHEDULE_LINE_SUCCESS;
+  return SCHEDULE_LINE_SUCCESS;
 }
 
-ScheduleLineResult schedule_line_add_station(ListElement elem1, ListElement elem2){
+ScheduleLineResult schedule_line_add_station(ListElement elem1, ListElement elem2)
+{
   scheduleline line;
   ScheduleStation station;
-if(elem1 == NULL || elem2 == NULL){
-  return SCHEDULE_LINE_BAD_ARGUMENTS;
-}
+  if (elem1 == NULL || elem2 == NULL)
+  {
+    return SCHEDULE_LINE_BAD_ARGUMENTS;
+  }
 
-line = (scheduleline)elem1;
-station = (ScheduleStation)elem2;
-    linkedListGoToHead(line->stations);
-    while(linkedListGoToNext(line->stations) == LIST_SUCCESS);
-    linkedListInsertLast(line->stations, station);
+  line = (scheduleline)elem1;
+  station = (ScheduleStation)elem2;
+  linkedListGoToHead(line->stations);
+  while (linkedListGoToNext(line->stations) == LIST_SUCCESS)
+    ;
+  linkedListInsertLast(line->stations, station);
   return SCHEDULE_LINE_SUCCESS;
-
 }
-
 
 ScheduleLineResult schedule_line_get_details(scheduleline line,
                                              ScheduleLineType *type /* out */,
                                              int *number /* out */,
                                              char **description /* out */,
-                                             double *price /* out */){
+                                             double *price /* out */)
+{
 
-                                          
-  if(line == NULL){
+  if (line == NULL)
+  {
     return SCHEDULE_LINE_BAD_ARGUMENTS;
   }
 
@@ -161,23 +178,75 @@ ScheduleLineResult schedule_line_get_details(scheduleline line,
   *description = line->description;
   *price = line->price;
 
-
   return 0;
 }
 
-  int is_price_valid(float price)
+ScheduleLineResult checkRoute(scheduleline line, const char *from, const char *to)
+{
+
+  ScheduleStation curr_station;
+  char *from_name = NULL;
+  char *to_name = NULL;
+  
+  linkedListGoToHead(line->stations);
+  linkedListSortElements(line->stations, compareStationByTime);
+  if (linkedListGetNumElements(line->stations) == 0)
+    return SCHEDULE_LINE_BAD_ARGUMENTS;
+
+  do
   {
-    price *= 1000;
-    if ((int)price % 10)
+    linkedListGetCurrent(line->stations, (ListElement *)&curr_station);
+    schedule_station_get_name(curr_station, &from_name);
+    if (strcmp(from_name, from) == 0)
     {
-      return 0;
+      break;
     }
-    return 1;
+  } while (linkedListGoToNext(line->stations) == LIST_SUCCESS);
+
+  while (linkedListGoToNext(line->stations) == LIST_SUCCESS)
+  {
+
+    linkedListGetCurrent(line->stations, (ListElement *)&curr_station);
+    schedule_station_get_name(curr_station, &to_name);
+    if (strcmp(to_name, to) == 0)
+    {
+      return SCHEDULE_LINE_SUCCESS;
+    }
   }
-
-
-void printstat(scheduleline line){
-    linkedListPrint(line->stations, stdout, 10);
-    return;
+  return SCHEDULE_LINE_FAIL;
 }
- 
+
+ScheduleLineResult get_first_and_last_stations(scheduleline line, char **first_station, char **last_station)
+{
+
+  ScheduleStation curr_station;
+  if (linkedListGetNumElements(line->stations) == 0)
+    return SCHEDULE_LINE_NULL_ARG;
+
+  linkedListGoToHead(line->stations);
+  linkedListSortElements(line->stations, compareStationByTime);
+  linkedListGetCurrent(line->stations, (ListElement *)&curr_station);
+  schedule_station_get_name(curr_station, first_station);
+  while (linkedListGoToNext(line->stations) == LIST_SUCCESS)
+    ;
+  linkedListGetCurrent(line->stations, (ListElement *)&curr_station);
+  schedule_station_get_name(curr_station, last_station);
+
+  return SCHEDULE_LINE_SUCCESS;
+}
+
+int is_price_valid(float price)
+{
+  price *= 1000;
+  if ((int)price % 10)
+  {
+    return 0;
+  }
+  return 1;
+}
+
+void printstat(scheduleline line)
+{
+  linkedListPrint(line->stations, stdout, 10);
+  return;
+}

@@ -281,19 +281,27 @@ ScheduleResult scheduleReportLinesBetweenStations(Schedule schedule,
                                                   const char *from,
                                                   const char *to)
 {
-scheduleline curr_line;
- LinkedList station_list;
- ScheduleStation curr_station;
+ scheduleline curr_line;
+  ScheduleLineType line_type;
+  int number;
+  char *description;
+  double price;
+  char *first_station = NULL;
+  char *last_station = NULL;
+
   linkedListGoToHead(schedule->line_list);
-do{
-linkedListGetCurrent(schedule->line_list,(ListElement*) &curr_line);
-schedule_line_get_stations(curr_line,(LinkedList*) &station_list);
-linkedListGoToHead(station_list);
+  do
+  {
+    linkedListGetCurrent(schedule->line_list,(ListElement *) &curr_line);
+    if (checkRoute(curr_line, from, to) == SCHEDULE_LINE_SUCCESS)
+    {
+      get_first_and_last_stations(curr_line, &first_station, &last_station);
+      schedule_line_get_details(curr_line, &line_type, &number, &description, &price);
+      schedulePrintLine(stdout, line_type, number, description, first_station, last_station, price);
+    }
 
-linkedListSortElements(station_list, compareStationByTime );
-
-}
-while(linkedListGoToNext(schedule->line_list) == LIST_SUCCESS);
+  } while (linkedListGoToNext(schedule->line_list) == LIST_SUCCESS);
+  return SCHEDULE_SUCCESS;
 }
 
 

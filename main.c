@@ -169,7 +169,7 @@ test_result_t test1()
         scheduleDestroy(schedule);
         return FAIL;
     }
-/*  stuck here!
+
     printf("\nReport stations for line\n");
     if (schedule_handle_result(scheduleReportStationsForLine(schedule, 37)))
     {
@@ -182,7 +182,7 @@ test_result_t test1()
         scheduleDestroy(schedule);
         return FAIL;
     }
-*/
+
     scheduleDestroy(schedule); 
     return SUCCESS;
 }
@@ -542,5 +542,5 @@ test_result_t test3()
 int main()
 {
     const test_func tests[] = {test1, test2, test3};
-    return tests[0]();
+    return tests[1]();
 }
